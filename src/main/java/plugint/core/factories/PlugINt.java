@@ -70,7 +70,19 @@ public class PlugINt {
 		return clazz;
 	}
 	
-	public Object createObject(String classFullName, Class<?>[] agumentType, Object[] arguments){
+	
+	public List<Class<?>> createClassesByInterfaceFullName(String interfaceFullName){
+		List<Class<?>> classes = new ArrayList<>();
+		int factoriesSize = factories.size();
+		for(int index =0; index<factoriesSize; index++){
+			ClassFactory factory = factories.get(index);
+			List<Class<?>> classesFound = factory.findClassesByInterface(interfaceFullName);
+			classes.addAll(classesFound);
+		}
+		return classes;
+	}
+	
+	public Object createObjectFromFullName(String classFullName, Class<?>[] agumentType, Object[] arguments){
 		Object object = null;
 		int factoriesSize = factories.size();
 		for(int index =0; index<factoriesSize; index++){
@@ -88,6 +100,22 @@ public class PlugINt {
 		return object;
 	}
 	
-	
+	public Object createObjectFromName(String className, Class<?>[] agumentType, Object[] arguments){
+		Object object = null;
+		int factoriesSize = factories.size();
+		for(int index =0; index<factoriesSize; index++){
+			ClassFactory factory = factories.get(index);
+			Class<?> clazz = factory.getClassByName(className);
+			if(clazz!=null) {
+				try {
+					object = clazz.getConstructor(agumentType).newInstance(arguments);
+					break;
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return object;
+	}
 
 }

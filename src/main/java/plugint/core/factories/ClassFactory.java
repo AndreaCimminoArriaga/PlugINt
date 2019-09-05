@@ -51,8 +51,9 @@ public class ClassFactory {
 			String clazzFoundName = classes.get(index);
 			try {
 				if(clazzFoundName.endsWith("."+className)) {
-					clazz = classLoader.loadClass(className);
-					break;
+					clazz = classLoader.loadClass(clazzFoundName);
+					if(clazz!=null)
+						break;
 				}
 			} catch (NoClassDefFoundError | ClassNotFoundException e) {
 				//e.printStackTrace(); this should be like this tp avoid printing verbose exceptions that may not refer to the class we are looking for
